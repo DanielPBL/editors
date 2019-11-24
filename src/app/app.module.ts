@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HtmlEditorComponent } from './html-editor/html-editor.component';
 import { MarkdownEditorComponent } from './markdown-editor/markdown-editor.component';
 import { CKEditorModule } from 'ckeditor4-angular';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CKEditorModule } from 'ckeditor4-angular';
     BrowserModule,
     BrowserAnimationsModule,
     MarkdownModule.forRoot(),
-    CKEditorModule
+    CKEditorModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

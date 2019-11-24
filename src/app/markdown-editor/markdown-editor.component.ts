@@ -1,14 +1,22 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, forwardRef } from '@angular/core';
 
 import * as SimpleMDE from 'simplemde/src/js/simplemde';
 import { MarkdownService } from 'ngx-markdown';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-markdown-editor',
   templateUrl: './markdown-editor.component.html',
-  styleUrls: ['./markdown-editor.component.scss']
+  styleUrls: ['./markdown-editor.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MarkdownEditorComponent),
+      multi: true
+    }
+  ]
 })
-export class MarkdownEditorComponent implements OnInit {
+export class MarkdownEditorComponent implements OnInit, ControlValueAccessor {
   @ViewChild('simplemde', { static: true }) mdeEl: ElementRef<HTMLTextAreaElement>;
 
   private simplemde: any;
@@ -154,21 +162,26 @@ export class MarkdownEditorComponent implements OnInit {
         return preview.innerHTML;
       }
     });
+
+    this.simplemde.codemirror.on('change', () => {
+      this.onChange(this.simplemde.value());
+      this.onTouched();
+    });
   }
 
+  writeValue(value: string): void {
+    if (this.simplemde && value) {
+      this.simplemde.value(value);
+    }
+  }
+
+  onChange: any = () => { };
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  onTouched: any = () => { };
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 }
-
-/*
- let compiled = this.markdownService.compile(markdown, decodeHtml);
-  compiled = this.katex ? this.markdownService.renderKatex(compiled, this.katexOptions) : compiled;
-  this.element.nativeElement.innerHTML = compiled;
-  this.handlePlugins();
-  this.markdownService.highlight(this.element.nativeElement);
-  setPluginClass(element, plugin) {
-      const preElements = element.querySelectorAll('pre');
-      for (let i = 0; i < preElements.length; i++) {
-          const classes = plugin instanceof Array ? plugin : [plugin];
-          preElements.item(i).classList.add(...classes);
-      }
-  }
-*/

@@ -8,4 +8,6 @@
 
 <ckeditor data="<p>Hello, world!</p>" [config]="{language: 'pt-br'}"></ckeditor>
 
-<app-markdown-editor></app-markdown-editor>
+<app-markdown-editor [(ngModel)]="title"></app-markdown-editor>
+
+<p>{{title}}</p>
